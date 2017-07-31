@@ -1,0 +1,76 @@
+﻿@model Tuple<int[][], int>
+@{
+    ViewBag.Title = "Home Page";
+}
+
+<div class="jumbotron">
+    <h1>ASP.NET</h1>
+    <p class="lead">ASP.NET is a free web framework for building great Web sites and Web applications using HTML, CSS and JavaScript.</p>
+    <p><a href="https://asp.net" class="btn btn-primary btn-lg">Learn more &raquo;</a></p>
+</div>
+
+<div class="row">
+    <div class="col-md-3">    
+        @using (Html.BeginForm("UploadMatrix", "Home", FormMethod.Post, new { enctype = "multipart/form-data" }))
+        {
+            <div>
+                @Html.TextBox("file", "", new { type = "file", id = "fileLoader", onchange = "readDataFromFile()", style = "display: none;" }) 
+                <input class="btn btn-default" type="button" onclick="openfileDialog()" value="Load matrix" />
+                <input id="submitFile" type="submit" value="Load matrix" style="display: none;" />
+            </div>
+        }
+    </div>
+    <div class="col-md-3">
+        @using (Html.BeginForm("GenerateMatrix", "Home", FormMethod.Post))
+        {
+            <div>
+                @Html.TextBox("number", Model == null ? 0: Model.Item2, new { type = "number", style="width:50px;" })
+                <input class="btn btn-default" type="submit" value="Generate matrix"/>
+            </div>
+        }
+    </div>
+    <div class="col-md-3">
+        <div>
+            @Html.ActionLink("Rotate matrix", "RotateMatrix", "Home", new { @class="btn btn-default" });
+        </div>
+        
+    </div>
+    <div class="col-md-3">
+        @using (Html.BeginForm("DownloadCSV", "Home", FormMethod.Post))
+        {
+            <div>
+                @Html.TextBox("fileName", "", new { type = "text", style = "width:70px;" })
+                <input class="btn btn-default" type="submit" value="Save matrix file" />
+            </div>
+        }
+    </div>
+    <hr />
+    <table class="table">
+        @if (Model != null)
+        {
+            if (Model.Item1 != null)
+            {
+                foreach (var itemMatrix in Model.Item1)
+                {
+            <tr>
+                @foreach (var item in itemMatrix)
+                {
+                    <td style="max-width: 50px;">
+                        @Html.DisplayFor(modelItem => item)
+                    </td>
+                }
+            </tr>
+                }
+            }
+        }
+    </table>
+</div>
+<script>
+    function openfileDialog() {
+        $("#fileLoader").click();
+    }
+
+    function readDataFromFile() {
+        $("#submitFile").click();
+    }
+</script>
